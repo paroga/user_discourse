@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<info>
+	<id>user_discourse</id>
+	<name>Discourse user and group backend</name>
+	<description>Authenticate Users via Discourse</description>
+	<licence>AGPL</licence>
+	<author>Patrick Gansterer</author>
+	<requiremin>5</requiremin>
+	<types>
+        <prelogin/>
+        <authentication/>
+	</types>
+</info>

@@ -1,0 +1,7 @@
+#discourse_settings input[name="discourse_url"] {
+    width: 30em;
+}
+
+#discourse_settings input[name="discourse_api_key"] {
+    width: 30em;
+}
