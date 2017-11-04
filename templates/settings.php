@@ -7,6 +7,10 @@
 		<input type="text" name="discourse_url" id="discourse_url" value="<?php p($_['discourse_url']); ?>">
 		<p><em>The base URL of your forum, for example http://discourse.example.com</em></p>
 		<br>
+		<label for="discourse_api_key"><?php p($l->t('API Key')); ?>
+		<input type="text" name="discourse_api_key" id="discourse_api_key" value="<?php p($_['discourse_api_key']); ?>">
+		<p><em>Found on your forum at /admin/api/keys. If you haven't yet created an API key, Click 'Generate Master API Key'. Copy and paste the API key here.</em></p>
+		<br>
 		<label for="discourse_sso_secret"><?php p($l->t('SSO Secret Key')); ?>
 		<input type="text" name="discourse_sso_secret" id="discourse_sso_secret" value="<?php p($_['discourse_sso_secret']); ?>">
 		<p><em>The secret key used to verify Discourse SSO requests. Set it to a string of text, at least 10 characters long.</em></p>
