@@ -1,6 +1,6 @@
 <?php
 
-class OC_USER_DISCOURSE extends OC_User_Backend {
+class OC_USER_DISCOURSE implements OCP\IUserBackend {
 
 	public $autocreate;
 
@@ -8,6 +8,25 @@ class OC_USER_DISCOURSE extends OC_User_Backend {
 		$this->autocreate = true;
 	}
 
+	public function getBackendName() {
+		return "Discourse";
+	}
+
+	public function getSupportedActions() {
+		return 256;
+	}
+
+	public function implementsActions($actions) {
+		return (bool)($this->getSupportedActions() & $actions);
+	}
+
+	public function getUsers() {
+		return array();
+	}
+
+	public function userExists() {
+		return false;
+	}
 
 	public function checkPassword($uid, $password) {
 		if (!isset($_GET['sso']) || !isset($_GET['sig']))
