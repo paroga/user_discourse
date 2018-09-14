@@ -18,19 +18,20 @@ if (OCP\App::isEnabled('user_discourse')) {
 	// register user backend
 	OC_User::useBackend( 'Discourse' );
 
-	$forceLogin = OCP\Config::getAppValue('user_discourse', 'discourse_force_discourse_login', true)
+	$forceLogin = OC::$server->getConfig()->getAppValue('user_discourse', 'discourse_force_discourse_login', true)
 		&& shouldEnforceAuthentication();
 
 	if( (isset($_GET['app']) && $_GET['app'] == 'user_discourse') || (!OCP\User::isLoggedIn() && $forceLogin && !isset($_GET['admin_login'])) ) {
 
-		$discourse_url = OCP\Config::getAppValue('user_discourse', 'discourse_url', '');
-		$discourse_sso_secret = OCP\Config::getAppValue('user_discourse', 'discourse_sso_secret', '');
+		$discourse_url = OC::$server->getConfig()->getAppValue('user_discourse', 'discourse_url', '');
+		$discourse_sso_secret = OC::$server->getConfig()->getAppValue('user_discourse', 'discourse_sso_secret', '');
 
 		if (!isset($_GET['sso']) && !isset($_GET['sig'])) {
 
-			$me = OCP\Util::getServerProtocol().'://'.OCP\Util::getServerHost().OCP\Util::getRequestUri();
+			$request = OC::$server->getRequest();
+			$me = $request->getServerProtocol().'://'.$request->getServerHost().$request->getRequestUri();
 
-			$nonce = OCP\Util::generateRandomBytes();
+			$nonce = OC::$server->getSecureRandom()->generate(30);
 			OC::$server->getSession()->set('user_discourse_nonce', $nonce);
 
 			$payload = base64_encode( http_build_query( array (

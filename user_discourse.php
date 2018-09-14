@@ -3,8 +3,10 @@
 class OC_USER_DISCOURSE implements OCP\IUserBackend {
 
 	public $autocreate;
+	private $config;
 
 	public function __construct() {
+		$this->config = $this->config = OC::$server->getConfig();
 		$this->autocreate = true;
 	}
 
@@ -32,7 +34,7 @@ class OC_USER_DISCOURSE implements OCP\IUserBackend {
 		if (!isset($_GET['sso']) || !isset($_GET['sig']))
 			return false;
 
-		$discourse_sso_secret = OCP\Config::getAppValue('user_discourse', 'discourse_sso_secret', '');
+		$discourse_sso_secret = $this->config->getAppValue('user_discourse', 'discourse_sso_secret', '');
 		$sso = $_GET['sso'];
 		$sig = $_GET['sig'];
 
@@ -58,7 +60,7 @@ class OC_USER_DISCOURSE implements OCP\IUserBackend {
 		OCP\Util::writeLog('discourse','Authenticated user '.$uid, OCP\Util::DEBUG);
 		$user = OC::$server->getUserManager()->get($uid);
 		if (!$user && $this->autocreate) {
-			$random_password = OCP\Util::generateRandomBytes(64);
+			$random_password = OC::$server->getSecureRandom()->generate(64);
 			OCP\Util::writeLog('discourse','Creating new user: '.$uid, OCP\Util::DEBUG);
 			$user = OC::$server->getUserManager()->createUser($uid, $random_password);
 		}
@@ -103,7 +105,7 @@ class OC_USER_DISCOURSE implements OCP\IUserBackend {
 	}
 
 	private function httpGet($path) {
-		$discourse_url = OCP\Config::getAppValue('user_discourse', 'discourse_url', '');
+		$discourse_url = $this->config->getAppValue('user_discourse', 'discourse_url', '');
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $discourse_url . $path);
@@ -142,7 +144,7 @@ class OC_USER_DISCOURSE implements OCP\IUserBackend {
 	}
 
 	private function getUserInfo($uid) {
-		$discourse_api_key = OCP\Config::getAppValue('user_discourse', 'discourse_api_key', '');
+		$discourse_api_key = $this->config->getAppValue('user_discourse', 'discourse_api_key', '');
 
 		$paramArray = array(
 			'api_key' => $discourse_api_key,
