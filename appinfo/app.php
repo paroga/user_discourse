@@ -80,6 +80,8 @@ function shouldEnforceAuthentication()
 
 	// Exceptions for the richdocuments app
 	$request_uri = $_SERVER['REQUEST_URI'];
+	if (strpos($request_uri, '/index.php/') === 0)
+		$request_uri = substr($request_uri, 10);
 	if (strpos($request_uri, '/apps/richdocuments/wopi/') === 0)
 		return false;
 	if (strpos($request_uri, '/ocs/') === 0)
