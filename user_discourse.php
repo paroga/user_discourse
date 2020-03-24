@@ -26,6 +26,10 @@ class OC_USER_DISCOURSE implements OCP\IUserBackend {
 		return array();
 	}
 
+	public function getDisplayNames() {
+		return array();
+	}
+
 	public function userExists() {
 		return false;
 	}
