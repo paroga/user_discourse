@@ -108,11 +108,12 @@ class OC_USER_DISCOURSE implements OCP\IUserBackend {
 		return $uid;
 	}
 
-	private function httpGet($path) {
+	private function httpGet($path, $headers = null) {
 		$discourse_url = $this->config->getAppValue('user_discourse', 'discourse_url', '');
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $discourse_url . $path);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$body = curl_exec($ch);
 		$rc = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -150,13 +151,12 @@ class OC_USER_DISCOURSE implements OCP\IUserBackend {
 	private function getUserInfo($uid) {
 		$discourse_api_key = $this->config->getAppValue('user_discourse', 'discourse_api_key', '');
 
-		$paramArray = array(
-			'api_key' => $discourse_api_key,
-			'api_username' => 'system'
-		);
-		$query = http_build_query($paramArray);
+		$headers = [
+			'Api-Key: '.$discourse_api_key,
+			'Api-Username: system'
+		];
 
-		$body = $this->httpGet("/users/$uid.json?$query");
+		$body = $this->httpGet("/users/$uid.json?$query", $headers);
 		if (!$body)
 			return false;
 
